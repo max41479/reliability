@@ -46,39 +46,16 @@
 					var value = $( event.target ).closest( "li" ).attr( "data-value" );
 					if ( value !== undefined ) {
 						var arr = value.split( "-" );
-						if ( ( arr[2] == null ) && ( arr[3] == null ) ) {  //deletion of level
-							var post_data = { 'id':arr[1] };
-							$.post( "del_level.php", post_data, function( data ) {
-								//load success massage in #result div element, with slide effect.
-								$( "#result" ).hide().html( "<div class='alert alert-success alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>" + data + "</div>" ).slideDown().delay( 3000 ).slideUp();
-								$( "#tree" ).load( "tree.php" );
-							} ).fail( function( err ) {  //load any error data
-								$( "#result" ).hide().html( "<div class='alert alert-danger alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>" + err.responseText + "</div>" ).slideDown().delay( 3000 ).slideUp();
-								$( "#tree" ).load( "tree.php" );
-							} );
-						}
-						else if ( arr[3] == null ) {  //deletion of circuit
-							post_data = { 'id':arr[2], 'level':arr[1] };
-							$.post( "del_circuit.php", post_data, function( data ) {
-								//load success massage in #result div element, with slide effect.
-								$( "#result" ).hide().html( "<div class='alert alert-success alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>" + data + "</div>" ).slideDown().delay( 3000 ).slideUp();
-								$( "#tree" ).load( "tree.php" );
-							} ).fail( function( err ) {  //load any error data
-								$( "#result" ).hide().html( "<div class='alert alert-danger alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>" + err.responseText + "</div>" ).slideDown().delay( 3000 ).slideUp();
-								$( "#tree" ).load( "tree.php" );
-							} );
-						}
-						else {  //deletion of element
-							post_data = { 'level':arr[1], 'circuit':arr[2], 'id':arr[3] };
-							$.post( "del_element.php", post_data, function( data ) {
-								//load success massage in #result div element, with slide effect.
-								$( "#result" ).hide().html( "<div class='alert alert-success alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>" + data + "</div>" ).slideDown().delay( 3000 ).slideUp();
-								$( "#tree" ).load( "tree.php" );
-							} ).fail( function( err ) {  //load any error data
-								$( "#result" ).hide().html( "<div class='alert alert-danger alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>" + err.responseText + "</div>" ).slideDown().delay( 3000 ).slideUp();
-								$( "#tree" ).load( "tree.php" );
-							} );
-						}
+						var post_data = { 'level_id':arr[1], 'circuit_id':arr[2], 'element_id':arr[3] };
+						$.post( "del.php", post_data, function( data ) {
+							//load success massage in #result div element, with slide effect.
+							$( "#result" ).hide().html( "<div class='alert alert-success alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>" + data + "</div>" ).slideDown().delay( 3000 )/*.slideUp()*/;
+							$( "#tree" ).load( "tree.php" );
+						} )
+						.fail( function( err ) {  //load any error data
+							$( "#result" ).hide().html( "<div class='alert alert-danger alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>" + err.responseText + "</div>" ).slideDown().delay( 3000 )/*.slideUp()*/;
+							$( "#tree" ).load( "tree.php" );
+						} );
 					}
 				} );
 				$body.on( {

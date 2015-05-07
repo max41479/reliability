@@ -4,11 +4,7 @@
 	<head>
 		<meta charset="utf-8">
 		<title>Добавление элемента</title>
-		<link rel="stylesheet" href="css/bootstrap.min.css">
-		<link rel="stylesheet" href="css/jquery-ui.css">
-		<script src="js/jquery-2.1.0.js"></script>
-		<script src="js/jquery-ui.js"></script>
-		<script src="js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="css/bootstrap.css">
 		<style>
 			.modal {
 				display:    none;
@@ -32,6 +28,8 @@
 		</style>
 	</head>
 	<body>
+		<script src="js/jquery-2.1.4.js"></script>
+		<script src="js/bootstrap.js"></script>
 		<div class="container">
 			<div class="container">
 				<h1>Добавление элемента</h1>

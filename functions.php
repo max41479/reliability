@@ -14,30 +14,6 @@ function add_level($name)
 	echo "Добавлен уровень с ID " . key($_SESSION['levels']) . "<br />";
 }
 
-function del_level($id)
-{
-	if(empty($_SESSION['circuits'][$id]))
-	{
-		if (empty($_SESSION['levels'][$id]))
-		{
-			header('HTTP/1.1 500 Internal Server Error');
-			echo "уровень с ID " . $id . " не существует<br />";
-		}
-		else
-		{
-			unset($_SESSION['levels'][$id]);
-			echo "уровень с ID " . $id . " успешно удален<br />";
-		}
-	}
-	else
-	{
-		header('HTTP/1.1 500 Internal Server Error');
-		echo "уровень с ID " . $id . " содержит элементы<br />";
-		exit();
-	}
-
-}
-
 function add_circuit($level, $name)
 {
 	if (empty($_SESSION['circuits']))
@@ -51,28 +27,6 @@ function add_circuit($level, $name)
 	}
 	end($_SESSION['circuits'][$level]);
 	echo "Добавлена схема с ID " . key($_SESSION['circuits'][$level]) . "<br />";
-}
-
-function del_circuit($id, $level)
-{
-	if(empty($_SESSION['elements'][$level][$id]))
-	{
-		if (empty($_SESSION['circuits'][$level][$id]))
-		{
-			header('HTTP/1.1 500 Internal Server Error');
-			echo "схема с ID " . $id . " не существует<br />";
-		}
-		else
-		{
-			unset($_SESSION['circuits'][$level][$id]);
-			echo "схема с ID " . $id . " успешно удалена<br />";
-		}
-	}
-	else
-	{
-		header('HTTP/1.1 500 Internal Server Error');
-		echo "схема с ID " . $id . " содержит элементы<br />";
-	}
 }
 
 function add_element($level, $circuit, $id, $category_id, $name, $position, $amount)
@@ -99,16 +53,60 @@ function add_element($level, $circuit, $id, $category_id, $name, $position, $amo
 	}
 }
 
-function del_element($level, $circuit, $id)
+function del($level_id, $circuit_id, $element_id)
 {
-	if (empty($_SESSION['elements'][$level][$circuit][$id]))
-	{
-		header('HTTP/1.1 500 Internal Server Error');
-		echo "элемент с ID " . $id . " не существует<br />";
+	if ( ($circuit_id == "") && ($element_id == "") )
+	{  //deletion of level
+		if(isset($_SESSION['circuits'][$circuit_id]))
+		{
+			if (isset($_SESSION['levels'][$level_id]))
+			{
+				header('HTTP/1.1 500 Internal Server Error');
+				echo "Уровень \"" . $_SESSION['levels'][$level_id] . "\" не существует.<br />";
+			}
+			else
+			{
+				echo "Уровень \"" . $_SESSION['levels'][$level_id] . "\" успешно удален.<br />";
+				unset($_SESSION['levels'][$level_id]);
+			}
+		}
+		else
+		{
+			header('HTTP/1.1 500 Internal Server Error');
+			echo "Уровень \"" . $_SESSION['levels'][$level_id] . "\" содержит элементы.<br />";
+			exit();
+		}
 	}
-	else
-	{
-		unset($_SESSION['elements'][$level][$circuit][$id]);
-		echo "элемент с ID " . $id . " успешно удален<br />";
+	else if ( $element_id == "" ) {  //deletion of circuit
+		if(empty($_SESSION['elements'][$level_id][$circuit_id]))
+		{
+			if (empty($_SESSION['circuits'][$level_id][$circuit_id]))
+			{
+				header('HTTP/1.1 500 Internal Server Error');
+				echo "Схема \"" . $_SESSION['circuits'][$level_id][$circuit_id] . "\" не существует.<br />";
+			}
+			else
+			{
+				echo "Схема \"" . $_SESSION['circuits'][$level_id][$circuit_id] . "\" успешно удалена.<br />";
+				unset($_SESSION['circuits'][$level_id][$circuit_id]);
+			}
+		}
+		else
+		{
+			header('HTTP/1.1 500 Internal Server Error');
+			echo "Схема \"" . $_SESSION['circuits'][$level_id][$circuit_id] . "\" содержит элементы.<br />";
+		}
+	}
+	else {  //deletion of element
+		if (empty($_SESSION['elements'][$level_id][$circuit_id][$element_id]))
+		{
+			header('HTTP/1.1 500 Internal Server Error');
+			echo "Элемент \"" . $_SESSION['elements'][$level_id][$circuit_id][$element_id] . "\" не существует<br />";
+		}
+		else
+		{
+			echo "Элемент \"" . $_SESSION['elements'][$level_id][$circuit_id][$element_id]['name'] . "\" успешно удален<br />";
+			unset($_SESSION['elements'][$level_id][$circuit_id][$element_id]);
+		}
 	}
 }
