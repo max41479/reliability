@@ -47,4 +47,3 @@ if (!empty($_SESSION['levels']))
 	}
 }
 $mysqli->close();
-?>

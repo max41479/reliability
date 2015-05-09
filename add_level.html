@@ -31,27 +31,26 @@
 		<script>
 			$(document).ready(function() {
 				$( "#submit" ).click(function(event) {
-				event.preventDefault();
-				//collect input field values
-				var name = $('input[name=name]').val(); 
-				//data to be sent to server
-				post_data = {'name':name};
+					event.preventDefault();
+					//collect input field values
+					var name = $('input[name=name]').val();
+					//data to be sent to server
+					post_data = {'name':name};
 
-				//Ajax post data to server
-				$.post('add_level.php', post_data, function(data){  
-					
-					//load success massage in #result div element, with slide effect.       
-					$("#result").hide().html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+data+'</div>').slideDown();
-					
-					//reset values in all input fields
-					$('form input').val(''); 
-					$('form textarea').val(''); 
-					
-				}).fail(function(err) {  //load any error data
-					$("#result").hide().html('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+err.responseText+'</div>').slideDown();
+					//Ajax post data to server
+					$.post('add_level.php', post_data, function(data){
+
+						//load success massage in #result div element, with slide effect.
+						$("#result").hide().html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+data+'</div>').slideDown();
+
+						//reset values in all input fields
+						$('form input').val('');
+						$('form textarea').val('');
+
+					}).fail(function(err) {  //load any error data
+						$("#result").hide().html('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+err.responseText+'</div>').slideDown();
+					});
 				});
-				});
-				
 			});
 		</script>
 	</body>

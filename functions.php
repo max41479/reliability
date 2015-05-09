@@ -48,20 +48,21 @@ function add_element($level, $circuit, $id, $category_id, $name, $position, $amo
 		}
 		else
 		{
+			header('HTTP/1.1 500 Internal Server Error');
 			echo "Элемент с ID " . key($_SESSION['elements'][$level][$circuit]) . " уже существует<br />";
 		}
 	}
 }
 
-function del($level_id, $circuit_id, $element_id)
+function del($level_id, $circuit_id, $element_id) //todo: replace Internal Server Error with meaningful message
 {
-	if ( ($circuit_id == "") && ($element_id == "") )
-	{  //deletion of level
-		if(isset($_SESSION['circuits'][$circuit_id]))
+	if ( ($circuit_id == "") && ($element_id == "") ) //deletion of level
+	{
+		if(!isset($_SESSION['circuits'][$circuit_id]))
 		{
-			if (isset($_SESSION['levels'][$level_id]))
+			if (!isset($_SESSION['levels'][$level_id]))
 			{
-				header('HTTP/1.1 500 Internal Server Error');
+				header('HTTP/1.1 500 Level "' . $_SESSION['levels'][$level_id] . '" does not exists.');
 				echo "Уровень \"" . $_SESSION['levels'][$level_id] . "\" не существует.<br />";
 			}
 			else
@@ -72,17 +73,18 @@ function del($level_id, $circuit_id, $element_id)
 		}
 		else
 		{
-			header('HTTP/1.1 500 Internal Server Error');
+			header('HTTP/1.1 500 Level "' . $_SESSION['levels'][$level_id] . '" contain elements.');
 			echo "Уровень \"" . $_SESSION['levels'][$level_id] . "\" содержит элементы.<br />";
 			exit();
 		}
 	}
-	else if ( $element_id == "" ) {  //deletion of circuit
-		if(empty($_SESSION['elements'][$level_id][$circuit_id]))
+	else if ( $element_id == "" ) //deletion of circuit
+	{
+		if(!isset($_SESSION['elements'][$level_id][$circuit_id]))
 		{
-			if (empty($_SESSION['circuits'][$level_id][$circuit_id]))
+			if (!isset($_SESSION['circuits'][$level_id][$circuit_id]))
 			{
-				header('HTTP/1.1 500 Internal Server Error');
+				header('HTTP/1.1 500 Circuit "' . $_SESSION['circuits'][$level_id][$circuit_id] . '" does not exists.');
 				echo "Схема \"" . $_SESSION['circuits'][$level_id][$circuit_id] . "\" не существует.<br />";
 			}
 			else
@@ -93,14 +95,15 @@ function del($level_id, $circuit_id, $element_id)
 		}
 		else
 		{
-			header('HTTP/1.1 500 Internal Server Error');
+			header('HTTP/1.1 500 Circuit "' . $_SESSION['circuits'][$level_id][$circuit_id] . '" contain elements.');
 			echo "Схема \"" . $_SESSION['circuits'][$level_id][$circuit_id] . "\" содержит элементы.<br />";
 		}
 	}
-	else {  //deletion of element
-		if (empty($_SESSION['elements'][$level_id][$circuit_id][$element_id]))
+	else //deletion of element
+	{
+		if (!isset($_SESSION['elements'][$level_id][$circuit_id][$element_id]))
 		{
-			header('HTTP/1.1 500 Internal Server Error');
+			header('HTTP/1.1 500 Element "' . $_SESSION['elements'][$level_id][$circuit_id][$element_id] . '" does not exists.');
 			echo "Элемент \"" . $_SESSION['elements'][$level_id][$circuit_id][$element_id] . "\" не существует<br />";
 		}
 		else
