@@ -58,7 +58,7 @@ function del($level_id, $circuit_id, $element_id) //todo: replace Internal Serve
 {
 	if ( ($circuit_id == "") && ($element_id == "") ) //deletion of level
 	{
-		if(!isset($_SESSION['circuits'][$circuit_id]))
+		if(!isset($_SESSION['circuits'][$level_id]))
 		{
 			if (!isset($_SESSION['levels'][$level_id]))
 			{
