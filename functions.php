@@ -91,6 +91,10 @@ function del($level_id, $circuit_id, $element_id) //todo: replace Internal Serve
 			{
 				echo "Схема \"" . $_SESSION['circuits'][$level_id][$circuit_id] . "\" успешно удалена.<br />";
 				unset($_SESSION['circuits'][$level_id][$circuit_id]);
+				if (empty( $_SESSION['circuits'][$level_id]))
+				{
+					unset($_SESSION['circuits'][$level_id]);
+				}
 			}
 		}
 		else
@@ -110,6 +114,10 @@ function del($level_id, $circuit_id, $element_id) //todo: replace Internal Serve
 		{
 			echo "Элемент \"" . $_SESSION['elements'][$level_id][$circuit_id][$element_id]['name'] . "\" успешно удален<br />";
 			unset($_SESSION['elements'][$level_id][$circuit_id][$element_id]);
+			if (empty( $_SESSION['elements'][$level_id][$circuit_id]))
+			{
+				unset($_SESSION['elements'][$level_id]);
+			}
 		}
 	}
 }
