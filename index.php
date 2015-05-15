@@ -7,6 +7,7 @@
 		<meta charset="utf-8">
 		<title>Расчет надежности</title>
 		<link rel="stylesheet" href="css/bootstrap.css">
+		<link rel="stylesheet" href="css/animation-loading-state.css">
 		<style>
 			li {
 				padding: 1px;
@@ -57,12 +58,35 @@
 			 * @param {string} script_name name of php script
 			 * @param {Object} post_data data which is sent to script through post
 			 * @param {string} result_div id of div where to put result message
+			 * @param {string} loading_element
 			 */
-			function post( script_name, post_data, result_div ) {
-				$.post( script_name, post_data, function( data ){
+			function post( script_name, post_data, result_div, loading_element) {
+				/*$.post( script_name, post_data, function( data ){
 					//load success massage in #result div element, with slide effect.
 					show_result_info(result_div, data, "success" );
 				}).fail( function( err ) { //load any error data
+					show_result_info(result_div, err.responseText, "danger" );
+				} ).always( function() {
+					$( "#tree" ).load( "tree.php" );
+				} )*/
+
+				$.ajax( {
+					type: "POST",
+					url: script_name,
+					data: post_data,
+					beforeSend: function(){
+						loading_element.find( "input" ).addClass( "loading" );
+						loading_element.find( "select" ).addClass( "loading" )
+					},
+					complete: function(){
+						loading_element.find( "input" ).removeClass( "loading" );
+						loading_element.find( "select" ).removeClass( "loading" );
+						$( "input" ).val( "" );
+					}
+				} ).success( function( data ) {
+					//load success massage in #result div element, with slide effect.
+					show_result_info(result_div, data, "success" );
+				} ).fail( function( err ) { //load any error data
 					show_result_info(result_div, err.responseText, "danger" );
 				} ).always( function() {
 					$( "#tree" ).load( "tree.php" );
@@ -100,8 +124,7 @@
 									}
 									else { //send data to server
 										var post_data = { 'level':level_name };
-										post( 'add_level.php', post_data, "#level_result" );
-										$( "input" ).val( "" ); //reset values in all input fields
+										post( 'add_level.php', post_data, "#level_result", $level );
 									}
 									return false;
 								}
@@ -146,8 +169,7 @@
 									}
 									else { //send data to server
 										var post_data = { 'circuit_name':circuit_name, level_id: level_id };
-										post( 'add_circuit2.php', post_data, "#circuit_result" );
-										$( "input" ).val( "" ); //reset values in all input fields
+										post( 'add_circuit2.php', post_data, "#circuit_result", $circuit);
 									}
 									return false;
 								}
@@ -166,7 +188,7 @@
 					var arr = $( event.target ).closest( "li" ).attr( "data-value").split( "-" );
 					bootbox.dialog( {
 						title: "Добавление элемента",
-						message: '<div title="Добавление элемента">' +
+						message: '<div title="Добавление элемента" id="add_element">' +
 									'<form class="form-horizontal" role="form">' +
 										'<div class="form-group">' +
 											'<label class="col-md-6 control-label" for="category">Выберите категорию</label>' +
@@ -226,8 +248,8 @@
 							"Добавить": {
 								className: "btn-success",
 								callback: function() {
-									//var post_data = { 'level_id':arr[1], 'circuit_id':arr[2], 'element_id':arr[3] };
 
+									var $add_element = $( "#add_element" );
 									var $element = $( "#element" );
 									var $position = $( "#position" );
 									var $amount = $( "#amount" );
@@ -263,8 +285,7 @@
 									}
 									else { //send data to server
 										var post_data = {'level':level_id, 'circuit':circuit_id, 'element_id':element_id, 'category_id':category_id, 'name':element_name, 'position':position, 'amount':amount};
-										post( 'add_element2.php', post_data, "#element_result" );
-										$( "input" ).val( "" ); //reset values in all input fields
+										post( 'add_element2.php', post_data, "#element_result", $add_element );
 									}
 									return false;
 								}
@@ -305,7 +326,7 @@
 				}, "span" );
 
 
-				$body.on( "change", "#category", function( event ) {
+				$body.on( "change", "#category", function() {
 					var $category = $( "#category" );
 					var $element = $( "#element" );
 					var $type = $( "#type" );
@@ -332,7 +353,7 @@
 						}
 					} );
 				});
-				$body.on( "change", "#type", function( event ) {
+				$body.on( "change", "#type", function() {
 					var $category = $( "#category" );
 					var $element = $( "#element" );
 					var $type = $( "#type" );

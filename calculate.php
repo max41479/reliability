@@ -3,13 +3,12 @@
 	<head>
 		<meta charset="utf-8">
 		<title>Выбираем условия</title>
-		<link rel="stylesheet" href="css/bootstrap.min.css">
-		<link rel="stylesheet" href="css/jquery-ui.css">
-		<script src="js/jquery-2.1.0.js"></script>
-		<script src="js/jquery-ui.js"></script>
-		<script src="js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="css/bootstrap.css">
 	</head>
 	<body>
+		<script src="js/jquery-2.1.4.js"></script>
+		<script src="js/bootstrap.js"></script>
+		<script src="js/bootbox.js"></script>
 		<div class="container">
 			<h1>Выбираем условия</h1>
 			<div id="result"></div>
@@ -63,7 +62,7 @@
 				<fieldset disabled>
 					<div class="form-group">
 						<label for="vlazhnost" class="col-md-4 control-label">Влажность:</label>
-						<div class="col-md-1">
+						<div class="col-md-2">
 							<select name="vlazhnost" id="vlazhnost" class="form-control">
 								<option value="">60..70</option>
 								<option value="">90..98</option>
