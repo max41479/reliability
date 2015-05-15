@@ -46,16 +46,16 @@
 				$( '[data-toggle="tooltip"]' ).tooltip()
 			}
 			/**
-			 * @param {string} result_div - id of div where to put result message
-			 * @param {string} message - result message
-			 * @param {string} result_type - "success" or "danger"
+			 * @param {string} result_div id of div where to put result message
+			 * @param {string} message result message
+			 * @param {string} result_type "success" or "danger"
 			 */
 			function show_result_info( result_div, message, result_type ) {
 				$( result_div ).clearQueue().hide().html( '<div class="alert alert-' + result_type + ' alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' + message + '</div>' ).slideDown().delay( 3000 ).slideUp();
 			}
 			/**
-			 * @param {string} script_name - name of php script
-			 * @param post_data - data which is sent to script through post
+			 * @param {string} script_name name of php script
+			 * @param {Object} post_data data which is sent to script through post
 			 * @param {string} result_div id of div where to put result message
 			 */
 			function post( script_name, post_data, result_div ) {
@@ -198,7 +198,7 @@
 												'</select>' +
 											'</div>' +
 										'</div>' +
-										'<div class="form-group">' +
+										'<div class="form-group" id="element_div">' +
 											'<label class="col-md-6 control-label" for="element">Выберите элемент</label>' +
 											'<div class="col-md-5">' +
 												'<select id="element" class="form-control" disabled>' +
@@ -206,13 +206,13 @@
 												'</select>' +
 											'</div>' +
 										'</div>' +
-										'<div class="form-group">' +
+										'<div class="form-group" id="position_div">' +
 											'<label for="position" class="col-md-6 control-label">Введите позицию</label>' +
 											'<div class="col-md-5">' +
 												'<input type="text" class="form-control" id="position">' +
 											'</div>' +
 										'</div>' +
-										'<div class="form-group">' +
+										'<div class="form-group" id="amount_div">' +
 											'<label for="amount" class="col-md-6 control-label">Введите количество</label>' +
 											'<div class="col-md-5">' +
 												'<input type="text" class="form-control" id="amount">' +
@@ -229,6 +229,11 @@
 									//var post_data = { 'level_id':arr[1], 'circuit_id':arr[2], 'element_id':arr[3] };
 
 									var $element = $( "#element" );
+									var $position = $( "#position" );
+									var $amount = $( "#amount" );
+									var $element_div = $( "#element_div" );
+									var $position_div = $( "#position_div" );
+									var $amount_div = $( "#amount_div" );
 									//collect input field values
 									var level_id = arr[1];
 									var circuit_id = arr[2];
@@ -236,15 +241,25 @@
 
 									var category_id = $( "#category" ).val();
 									var element_name = $element.find( "option:selected" ).text();
-									var position = $( "#position" ).val();
-									var amount = $( "#amount" ).val();
+									var position = $position.val();
+									var amount = $amount.val();
 
 									//hide all error messages
-									$element.removeClass( "has-error" );
+									$element_div.removeClass( "has-error" );
+									$position_div.removeClass( "has-error" );
+									$amount_div.removeClass( "has-error" );
 									$( ".alert" ).slideUp();
-									if( element_name.length < 3 ) { //input validation
-										$element.addClass( "has-error" );
-										show_result_info( "#element_result", "Название слишком короткое либо пустое!", "danger" );
+									if(element_id == null) {
+										$element_div.addClass( "has-error" );
+										show_result_info( "#element_result", "Элемент не выбран.", "danger" );
+									}
+									else if(!$.isNumeric( position )) { //check entered data is numbers
+										$position_div.addClass( "has-error" );
+										show_result_info( "#element_result", "В поле позиции разрешены только цифры.", "danger" );
+									}
+									else if(!$.isNumeric( amount )) { //check entered data is numbers
+										$amount_div.addClass( "has-error" );
+										show_result_info( "#element_result", "В поле количества разрешены только цифры.", "danger" );
 									}
 									else { //send data to server
 										var post_data = {'level':level_id, 'circuit':circuit_id, 'element_id':element_id, 'category_id':category_id, 'name':element_name, 'position':position, 'amount':amount};
