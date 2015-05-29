@@ -10,8 +10,8 @@ function add_level($name)
 	{
 		$_SESSION['levels'][] = $name;
 	}
-	end($_SESSION['levels']);
-	echo "Добавлен уровень с ID " . key($_SESSION['levels']) . "<br />";
+	//end($_SESSION['levels']);
+	echo "Добавлен уровень  " . $name . "<br />";
 }
 
 function add_circuit($level, $name)
@@ -25,32 +25,36 @@ function add_circuit($level, $name)
 	{
 		$_SESSION['circuits'][$level][] = $name;
 	}
-	end($_SESSION['circuits'][$level]);
-	echo "Добавлена схема с ID " . key($_SESSION['circuits'][$level]) . "<br />";
+	//end($_SESSION['circuits'][$level]);
+	echo "Добавлена схема " . $name . "<br />";
 }
 
-function add_element($level, $circuit, $id, $category_id, $name, $position, $amount)
+function add_element($level, $circuit, $id, $category_id, $name, $position, $amount, $pryamoy_tok)
 {
-	if (empty($_SESSION['elements'][$level][$circuit]))
-	{
-			$_SESSION['elements'][$level][$circuit] = array();
-			$_SESSION['elements'][$level][$circuit][$id] = array('name' => $name, 'category_id' => $category_id, 'position' => $position, 'amount' => $amount);
-			end($_SESSION['elements'][$level][$circuit]);
-			echo "Добавлен элемент с ID " . key($_SESSION['elements'][$level][$circuit]) . "<br />";
+	if (empty($_SESSION['positions'])) {
+		$_SESSION['positions'] = array();
 	}
-	else
-	{
-		if(!array_key_exists($id, $_SESSION['elements'][$level][$circuit]))
-		{
-			$_SESSION['elements'][$level][$circuit][$id] = array('name' => $name, 'category_id' => $category_id, 'position' => $position, 'amount' => $amount);
-			end($_SESSION['elements'][$level][$circuit]);
-			echo "Добавлен элемент с ID " . key($_SESSION['elements'][$level][$circuit]) . "<br />";
+	if (!in_array($position, $_SESSION['positions'])) {
+		if (empty($_SESSION['elements'][$level][$circuit])) {
+			$_SESSION['elements'][$level][$circuit] = array();
+			$_SESSION['elements'][$level][$circuit][$id] = array('name' => $name, 'category_id' => $category_id, 'position' => $position, 'amount' => $amount, 'pryamoy_tok' => $pryamoy_tok);
+			//end($_SESSION['elements'][$level][$circuit]);
+			$_SESSION['positions'][] = $position;
+			echo "Добавлен элемент " . $name . ".";
+		} else {
+			if (!array_key_exists($id, $_SESSION['elements'][$level][$circuit])) {
+				$_SESSION['elements'][$level][$circuit][$id] = array('name' => $name, 'category_id' => $category_id, 'position' => $position, 'amount' => $amount, 'pryamoy_tok' => $pryamoy_tok);
+				end($_SESSION['elements'][$level][$circuit]);
+				$_SESSION['positions'][] = $position;
+				echo "Добавлен элемент " . $name . ".";
+			} else {
+				header('HTTP/1.1 500 Internal Server Error');
+				echo "Элемент " . $name . " уже присутствует на плате.";
+			}
 		}
-		else
-		{
-			header('HTTP/1.1 500 Internal Server Error');
-			echo "Элемент с ID " . key($_SESSION['elements'][$level][$circuit]) . " уже существует<br />";
-		}
+	} else {
+		header('HTTP/1.1 500 Error: duplicate position.');
+		echo "Элемент со схемной позицией " . $position . " уже присутствует на плате.";
 	}
 }
 
@@ -113,7 +117,9 @@ function del($level_id, $circuit_id, $element_id) //todo: replace Internal Serve
 		else
 		{
 			echo "Элемент \"" . $_SESSION['elements'][$level_id][$circuit_id][$element_id]['name'] . "\" успешно удален<br />";
-			unset($_SESSION['elements'][$level_id][$circuit_id][$element_id]);
+			$key = array_search($_SESSION['elements'][$level_id][$circuit_id][$element_id]['position'], $_SESSION['positions']);
+			unset( $_SESSION['positions'][ $key ] );
+			unset( $_SESSION['elements'][$level_id][$circuit_id][$element_id] );
 			if (empty( $_SESSION['elements'][$level_id][$circuit_id]))
 			{
 				unset($_SESSION['elements'][$level_id]);

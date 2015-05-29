@@ -31,7 +31,7 @@ if (!empty($_SESSION['levels']))
 						echo '<ul id="elements-' . $lvl_id . '-' . $circuit_id . '">';
 						foreach ($elements[$lvl_id][$circuit_id] as $element_id => $element)
 						{
-							echo '<li data-value="element-' . $lvl_id . '-' . $circuit_id . '-' . $element_id . '"><span>' . $element['name'] . ' <span class="label label-default">'. $element_types[$element['category_id']] . '</span><button type="button" name="close" class="close" style="display: none; color: red; margin-left: 3px;" data-toggle="tooltip" title="Удалить элемент">&times;</button></span>';
+							echo '<li data-value="element-' . $lvl_id . '-' . $circuit_id . '-' . $element_id . '"><span>' . $element['name'] . ' <span class="label label-default">'. $element_types[$element['category_id']] . '</span> x ' . $element['amount'] . '<button type="button" name="close" class="close" style="display: none; color: red; margin-left: 3px;" data-toggle="tooltip" title="Удалить элемент">&times;</button></span>';
 						}
 						echo '</ul>';
 					}

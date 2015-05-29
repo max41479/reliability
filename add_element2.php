@@ -18,12 +18,13 @@
 
 		//Sanitize input data using PHP filter_var().
 		$name = $_POST["name"];
-		$level = $_POST["level"];
-		$circuit = $_POST["circuit"];
-		$element_id = $_POST["element_id"];
-		$category_id = $_POST["category_id"];
-		$position = $_POST["position"];
-		$amount = $_POST["amount"];
+		$level = (int) $_POST["level"];
+		$circuit = (int) $_POST["circuit"];
+		$element_id = (int) $_POST["element_id"];
+		$category_id = (int) $_POST["category_id"];
+		$position = (int) $_POST["position"];
+		$amount = (int) $_POST["amount"];
+		$pryamoy_tok = (float) $_POST["pryamoy_tok"];
 
 		
 		//additional php validation
@@ -60,7 +61,7 @@
 		//proceed
 		include "db.php";
 		include "functions.php";
-		add_element($level, $circuit, $element_id, $category_id, $name, $position, $amount);
+		add_element($level, $circuit, $element_id, $category_id, $name, $position, $amount, $pryamoy_tok);
 		$mysqli->close();
 	}
 ?>

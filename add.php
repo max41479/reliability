@@ -3,13 +3,11 @@
 	<head>
 		<meta charset="utf-8">
 		<title>Добавление элемента</title>
-		<link rel="stylesheet" href="css/bootstrap.min.css">
-		<link rel="stylesheet" href="css/jquery-ui.css">
-		<script src="js/jquery-2.1.0.js"></script>
-		<script src="js/jquery-ui.js"></script>
-		<script src="js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="css/bootstrap.css">
 	</head>
 	<body>
+		<script src="js/jquery-2.1.4.js"></script>
+		<script src="js/bootstrap.js"></script>
 		<div class="container">
 			<h1>Добавление элемента</h1>
 			<div id="result"></div>
@@ -91,14 +89,14 @@
 						$("#result").hide().html('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+err.responseText+'</div>').slideDown();
 					});
 				});
-				$("#category_id").change(function()
+				$( "#category_id" ).change(function()
 				{
 					var category_id = $('#category_id').val();
 					var post_data = {'id':category_id};
 					$.post('list_of_levels.php', post_data, function(data){
-						$("#type").html(data).prop('disabled', false);
+						$("#type_id").html(data).prop('disabled', false);
 					}).fail(function(err) {  //load any error data
-						$("#type").html(err.responseText).prop('disabled', true);
+						$("#type_id").html(err.responseText).prop('disabled', true);
 					});
 				
 				});

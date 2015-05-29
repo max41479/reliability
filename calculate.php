@@ -15,18 +15,9 @@
 			<form class="form-horizontal" role="form" action="calculate2.php" method="post">
 				<div class="form-group">
 					<label for="temperature" class="col-md-4 control-label">Температура:</label>
-					<div class="col-md-1">
-						<select name="temperature" id="temperature" class="form-control">
-							<option value="0">25</option>
-							<option value="1">30</option>
-							<option value="2">35</option>
-							<option value="3">40</option>
-							<option value="4">45</option>
-							<option value="5">50</option>
-							<option value="6">55</option>
-							<option value="7">60</option>
-						</select>
-					</div>
+						<div class="col-md-2">
+							<input type="text" class="form-control" name="temperature"  id="temperature">
+						</div>
 					<div class="col-md-1">
 						<p>°C</p>
 					</div>
@@ -59,7 +50,7 @@
 						<input type="radio" name="pri" id="pri" value="summarnoe"> суммарное воздействие
 					</label>
 				</div>
-				<fieldset disabled>
+				<fieldset disabled style="display: none">
 					<div class="form-group">
 						<label for="vlazhnost" class="col-md-4 control-label">Влажность:</label>
 						<div class="col-md-2">
@@ -116,7 +107,7 @@
 						<p>ч</p>
 					</div>
 				</div>
-				<div class="form-group">
+				<div class="form-group" style="display: none">
 					<label for="pryamoy_tok" class="col-md-4 control-label">Рабочая величина среднего прямого тока через диод:</label>
 					<div class="col-md-2">
 						<input type="text" class="form-control" name="pryamoy_tok">

@@ -30,14 +30,13 @@
 					<ul id="tree">
 						<?php include "tree.php";
 						//var_dump($_SESSION);
-						//$_SESSION['levels'][0] = "131213123"
 						?>
 					</ul>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-6">
-					<a href="#" id="add_level" class="btn btn-default">Добавить элемент первого уровня</a>
+					<a href="#" id="add_level" class="btn btn-default">Добавить блок</a>
 					<div id="result" style="margin-top: 15px;"></div>
 				</div>
 			</div>
@@ -61,15 +60,6 @@
 			 * @param {string} loading_element
 			 */
 			function post( script_name, post_data, result_div, loading_element) {
-				/*$.post( script_name, post_data, function( data ){
-					//load success massage in #result div element, with slide effect.
-					show_result_info(result_div, data, "success" );
-				}).fail( function( err ) { //load any error data
-					show_result_info(result_div, err.responseText, "danger" );
-				} ).always( function() {
-					$( "#tree" ).load( "tree.php" );
-				} )*/
-
 				$.ajax( {
 					type: "POST",
 					url: script_name,
@@ -81,11 +71,11 @@
 					complete: function(){
 						loading_element.find( "input" ).removeClass( "loading" );
 						loading_element.find( "select" ).removeClass( "loading" );
-						$( "input" ).val( "" );
 					}
 				} ).success( function( data ) {
 					//load success massage in #result div element, with slide effect.
 					show_result_info(result_div, data, "success" );
+					$( "input" ).val( "" );
 				} ).fail( function( err ) { //load any error data
 					show_result_info(result_div, err.responseText, "danger" );
 				} ).always( function() {
@@ -96,11 +86,11 @@
 			$( document ).ready( function() {
 				$( "#add_level" ).on( "click", function() {
 					bootbox.dialog( {
-						title: "Добавление уровня",
-						message: '<div title="Добавление уровня">' +
+						title: "Добавление блока",
+						message: '<div title="Добавление блока">' +
 									'<form class="form-horizontal" role="form">' +
 										'<div class="form-group" id="level">' +
-											'<label for="name" class="col-md-6 control-label">Введите название уровня</label>' +
+											'<label for="name" class="col-md-6 control-label">Введите название блока</label>' +
 											'<div class="col-md-5">' +
 												'<input type="text" class="form-control" id="level_name">' +
 											'</div>' +
@@ -191,10 +181,10 @@
 						message: '<div title="Добавление элемента" id="add_element">' +
 									'<form class="form-horizontal" role="form">' +
 										'<div class="form-group">' +
-											'<label class="col-md-6 control-label" for="category">Выберите категорию</label>' +
+											'<label class="col-md-6 control-label" for="category">Выберите категорию элемента</label>' +
 											'<div class="col-md-5">' +
 												'<select id="category" class="form-control">' +
-												'<option value="0" selected disabled>Выберите категорию</option>' +
+												'<option value="0" selected disabled>Выберите категорию элемента</option>' +
 												'<?php
 													include ("db.php");
 													global $mysqli;
@@ -213,10 +203,10 @@
 											'</div>' +
 										'</div>' +
 										'<div class="form-group">' +
-											'<label class="col-md-6 control-label" for="type">Выберите тип</label>' +
+											'<label class="col-md-6 control-label" for="type">Выберите тип элемента</label>' +
 											'<div class="col-md-5">' +
 												'<select id="type" class="form-control" disabled>' +
-													'<option value="0" selected disabled>Выберите категорию</option>' +
+													'<option value="0" selected disabled>Выберите категорию элемента</option>' +
 												'</select>' +
 											'</div>' +
 										'</div>' +
@@ -224,25 +214,35 @@
 											'<label class="col-md-6 control-label" for="element">Выберите элемент</label>' +
 											'<div class="col-md-5">' +
 												'<select id="element" class="form-control" disabled>' +
-													'<option value="0" selected disabled>Выберите категорию</option>' +
+													'<option value="0" selected disabled>Выберите категорию элемента</option>' +
 												'</select>' +
 											'</div>' +
 										'</div>' +
 										'<div class="form-group" id="position_div">' +
-											'<label for="position" class="col-md-6 control-label">Введите позицию</label>' +
+											'<label for="position" class="col-md-6 control-label">Введите схемную позицию</label>' +
 											'<div class="col-md-5">' +
 												'<input type="text" class="form-control" id="position">' +
 											'</div>' +
 										'</div>' +
 										'<div class="form-group" id="amount_div">' +
-											'<label for="amount" class="col-md-6 control-label">Введите количество</label>' +
+											'<label for="amount" class="col-md-6 control-label">Введите количество элементов</label>' +
 											'<div class="col-md-5">' +
 												'<input type="text" class="form-control" id="amount">' +
 											'</div>' +
 										'</div>' +
+										'<div class="form-group" id="pryamoy_tok_div" style="display: none">' +
+											'<label for="pryamoy_tok" class="col-md-6 control-label">Коэффициент нагрузки диода:</label>' +
+											'<div class="col-md-5">' +
+												'<input type="text" class="form-control" id="pryamoy_tok">' +
+											'</div>' +
+										'</div>' +
 										'<div id="element_result"></div>' +
+										'<div id="position_result"></div>' +
+										'<div id="amount_result"></div>' +
+										'<div id="pryamoy_tok_result"></div>' +
 									'</form>' +
 								'</div>',
+						size: 'large',
 						onEscape: true,
 						buttons: {
 							"Добавить": {
@@ -256,6 +256,7 @@
 									var $element_div = $( "#element_div" );
 									var $position_div = $( "#position_div" );
 									var $amount_div = $( "#amount_div" );
+									var $pryamoy_tok_div = $( "#pryamoy_tok_div" );
 									//collect input field values
 									var level_id = arr[1];
 									var circuit_id = arr[2];
@@ -265,26 +266,34 @@
 									var element_name = $element.find( "option:selected" ).text();
 									var position = $position.val();
 									var amount = $amount.val();
+									var pryamoy_tok = $( "#pryamoy_tok" ).val();
 
 									//hide all error messages
-									$element_div.removeClass( "has-error" );
-									$position_div.removeClass( "has-error" );
-									$amount_div.removeClass( "has-error" );
+									$( "div" ).removeClass( "has-error" );
 									$( ".alert" ).slideUp();
-									if(element_id == null) {
+									var state = 0;
+									if( element_id == null ) {
 										$element_div.addClass( "has-error" );
 										show_result_info( "#element_result", "Элемент не выбран.", "danger" );
+										state = 1;
 									}
-									else if(!$.isNumeric( position )) { //check entered data is numbers
+									if( ! $.isNumeric( position ) ) { //check entered data is numbers
 										$position_div.addClass( "has-error" );
-										show_result_info( "#element_result", "В поле позиции разрешены только цифры.", "danger" );
+										show_result_info( "#position_result", "В поле позиции разрешены только цифры.", "danger" );
+										state = 1;
 									}
-									else if(!$.isNumeric( amount )) { //check entered data is numbers
+									if( ! $.isNumeric( amount ) ) { //check entered data is numbers
 										$amount_div.addClass( "has-error" );
-										show_result_info( "#element_result", "В поле количества разрешены только цифры.", "danger" );
+										show_result_info( "#amount_result", "В поле количества разрешены только цифры.", "danger" );
+										state = 1;
 									}
-									else { //send data to server
-										var post_data = {'level':level_id, 'circuit':circuit_id, 'element_id':element_id, 'category_id':category_id, 'name':element_name, 'position':position, 'amount':amount};
+									if( ! $.isNumeric( pryamoy_tok ) &&  category_id == 4 ) { //check entered data is numbers
+										$pryamoy_tok_div.addClass( "has-error" );
+										show_result_info( "#pryamoy_tok_result", "В поле рабочей величины среднего прямого тока через диод разрешены только цифры.", "danger" );
+										state = 1;
+									}
+									if ( state == 0 ) { //send data to server
+										var post_data = { 'level':level_id, 'circuit':circuit_id, 'element_id':element_id, 'category_id':category_id, 'name':element_name, 'position':position, 'amount':amount, 'pryamoy_tok':pryamoy_tok };
 										post( 'add_element2.php', post_data, "#element_result", $add_element );
 									}
 									return false;
@@ -331,25 +340,47 @@
 					var $element = $( "#element" );
 					var $type = $( "#type" );
 					var category_id = $category.val();
+					$( "div" ).removeClass( "has-error" );
 					$.ajax( {
 						type: "POST",
 						url: "list_of_levels.php",
 						data: { 'id' : category_id },
+						beforeSend: function(){
+							$( "#category" ).addClass( "loading" )
+						},
+						complete: function(){
+							$( "#category" ).removeClass( "loading" );
+							if ( category_id == 4 ) {
+								$( "#pryamoy_tok_div" ).show();
+							} else {
+								$( "#pryamoy_tok_div" ).hide();
+							}
+						},
 						success: function( data ) {
 							$( "#type" ).html( data ).prop( 'disabled', false );
 							$element.html( '<option value="0" selected disabled>Выберите тип</option>' ).prop( "disabled", true );
 						},
 						error: function( err ) {  //load any error data
 							$type.html(err.responseText).prop('disabled', true);
-							var type_id = $category.val();
 							var group_id = $type.val();
-							var post_data = {'type':type_id, 'group_id':group_id};
-							$.post('list_of_elements.php', post_data, function(data){
-								$element.html(data).prop('disabled', false);
-							})
-								.fail(function(err) {  //load any error data
-									$element.html(err.responseText).prop('disabled', true);
-								})
+							var post_data = {'type':category_id, 'group_id':group_id};
+							$.ajax({
+								type: "POST",
+								url: 'list_of_elements.php',
+								data: post_data,
+								beforeSend: function(){
+									$( "#category" ).addClass( "loading" )
+								},
+								complete: function(){
+									$( "#category" ).removeClass( "loading" )
+								},
+								success: function( data ) {
+									$element.html(data).prop('disabled', false)
+								},
+								error: function( err ) {
+									$element.html(err.responseText).prop('disabled', true)
+								}
+							});
 						}
 					} );
 				});
@@ -360,10 +391,22 @@
 					var type_id = $category.val(); // TODO: why type_id = $category.val(); ?
 					var group_id = $type.val(); // TODO: why group_id = $type.val(); ?
 					var post_data = {'type':type_id, 'group_id':group_id};
-					$.post('list_of_elements.php', post_data, function(data){
-						$element.html(data).prop('disabled', false);
-					}).fail(function(err) {  //load any error data
-						$element.html(err.responseText).prop('disabled', true);
+					$.ajax({
+						type: "POST",
+						url: 'list_of_elements.php',
+						data: post_data,
+						beforeSend: function(){
+							$( "#type" ).addClass( "loading" )
+						},
+						complete: function(){
+							$( "#type" ).removeClass( "loading" )
+						},
+						success: function( data ) {
+							$element.html(data).prop('disabled', false);
+						},
+						error: function( err ) {
+							$element.html(err.responseText).prop('disabled', true);
+						}
 					});
 				});
 				set_tooltips()
