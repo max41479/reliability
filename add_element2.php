@@ -24,7 +24,9 @@
 		$category_id = (int) $_POST["category_id"];
 		$position = (int) $_POST["position"];
 		$amount = (int) $_POST["amount"];
-		$pryamoy_tok = (float) $_POST["pryamoy_tok"];
+		$load_coefficient_diode = (float) $_POST["load_coefficient_diode"];
+		$load_coefficient_capacitor = (float) $_POST["load_coefficient_capacitor"];
+		$load_coefficient_resistor = (float) $_POST["load_coefficient_resistor"];
 
 		
 		//additional php validation
@@ -61,7 +63,7 @@
 		//proceed
 		include "db.php";
 		include "functions.php";
-		add_element($level, $circuit, $element_id, $category_id, $name, $position, $amount, $pryamoy_tok);
+		add_element($level, $circuit, $element_id, $category_id, $name, $position, $amount, $load_coefficient_diode, $load_coefficient_capacitor, $load_coefficient_resistor);
 		$mysqli->close();
 	}
 ?>

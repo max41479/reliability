@@ -230,16 +230,30 @@
 												'<input type="text" class="form-control" id="amount">' +
 											'</div>' +
 										'</div>' +
-										'<div class="form-group" id="pryamoy_tok_div" style="display: none">' +
-											'<label for="pryamoy_tok" class="col-md-6 control-label">Коэффициент нагрузки диода:</label>' +
+										'<div class="form-group" id="load_coefficient_diode_div" style="display: none">' +
+											'<label for="load_coefficient_diode" class="col-md-6 control-label">Коэффициент нагрузки диода:</label>' +
 											'<div class="col-md-5">' +
-												'<input type="text" class="form-control" id="pryamoy_tok">' +
+												'<input type="text" class="form-control" id="load_coefficient_diode">' +
 											'</div>' +
 										'</div>' +
+										'<div class="form-group" id="load_coefficient_capacitor_div" style="display: none">' +
+											'<label for="load_coefficient_capacitor" class="col-md-6 control-label">Коэффициент нагрузки конденсатора:</label>' +
+											'<div class="col-md-5">' +
+												'<input type="text" class="form-control" name="load_coefficient_capacitor" id="load_coefficient_capacitor">' +
+											'</div>' +
+										'</div>'+
+										'<div class="form-group" id="load_coefficient_resistor_div" style="display: none">' +
+											'<label for="load_coefficient_resistor" class="col-md-6 control-label">Коэффициент нагрузки резистора:</label>' +
+											'<div class="col-md-5">' +
+												'<input type="text" class="form-control" name="load_coefficient_resistor" id="load_coefficient_resistor">' +
+											'</div>' +
+										'</div>'+
 										'<div id="element_result"></div>' +
 										'<div id="position_result"></div>' +
 										'<div id="amount_result"></div>' +
-										'<div id="pryamoy_tok_result"></div>' +
+										'<div id="load_coefficient_diode_result"></div>' +
+										'<div id="load_coefficient_capacitor_result"></div>' +
+										'<div id="load_coefficient_resistor_result"></div>' +
 									'</form>' +
 								'</div>',
 						size: 'large',
@@ -256,7 +270,10 @@
 									var $element_div = $( "#element_div" );
 									var $position_div = $( "#position_div" );
 									var $amount_div = $( "#amount_div" );
-									var $pryamoy_tok_div = $( "#pryamoy_tok_div" );
+									var $load_coefficient_diode_div = $( "#load_coefficient_diode_div" );
+									var $load_coefficient_capacitor_div = $( "#load_coefficient_capacitor_div" );
+									var $load_coefficient_resistor_div = $( "#load_coefficient_resistor_div" );
+
 									//collect input field values
 									var level_id = arr[1];
 									var circuit_id = arr[2];
@@ -266,12 +283,14 @@
 									var element_name = $element.find( "option:selected" ).text();
 									var position = $position.val();
 									var amount = $amount.val();
-									var pryamoy_tok = $( "#pryamoy_tok" ).val();
+									var load_coefficient_diode = $( "#load_coefficient_diode" ).val();
+									var $load_coefficient_capacitor = $( "#load_coefficient_capacitor").val();
+									var $load_coefficient_resistor = $( "#load_coefficient_resistor").val();
 
 									//hide all error messages
 									$( "div" ).removeClass( "has-error" );
 									$( ".alert" ).slideUp();
-									var state = 0;
+									var state = 0; // 0 - all ok; 1 - error
 									if( element_id == null ) {
 										$element_div.addClass( "has-error" );
 										show_result_info( "#element_result", "Элемент не выбран.", "danger" );
@@ -287,13 +306,23 @@
 										show_result_info( "#amount_result", "В поле количества разрешены только цифры.", "danger" );
 										state = 1;
 									}
-									if( ! $.isNumeric( pryamoy_tok ) &&  category_id == 4 ) { //check entered data is numbers
-										$pryamoy_tok_div.addClass( "has-error" );
-										show_result_info( "#pryamoy_tok_result", "В поле рабочей величины среднего прямого тока через диод разрешены только цифры.", "danger" );
+									if( ! $.isNumeric( load_coefficient_diode ) &&  category_id == 4 ) { //check entered data is numbers
+										$load_coefficient_diode_div.addClass( "has-error" );
+										show_result_info( "#load_coefficient_diode_result", "В поле коэффициента нагрузки диода разрешены только цифры.", "danger" );
+										state = 1;
+									}
+									if( ! $.isNumeric( $load_coefficient_capacitor ) &&  category_id == 5 ) { //check entered data is numbers
+										$load_coefficient_capacitor_div.addClass( "has-error" );
+										show_result_info( "#load_coefficient_capacitor_result", "В поле коэффициента нагрузки конденсатора разрешены только цифры.", "danger" );
+										state = 1;
+									}
+									if( ! $.isNumeric( $load_coefficient_resistor ) &&  category_id == 2 ) { //check entered data is numbers
+										$load_coefficient_resistor_div.addClass( "has-error" );
+										show_result_info( "#load_coefficient_resistor_result", "В поле коэффициента нагрузки резистора разрешены только цифры.", "danger" );
 										state = 1;
 									}
 									if ( state == 0 ) { //send data to server
-										var post_data = { 'level':level_id, 'circuit':circuit_id, 'element_id':element_id, 'category_id':category_id, 'name':element_name, 'position':position, 'amount':amount, 'pryamoy_tok':pryamoy_tok };
+										var post_data = { 'level':level_id, 'circuit':circuit_id, 'element_id':element_id, 'category_id':category_id, 'name':element_name, 'position':position, 'amount':amount, 'load_coefficient_diode':load_coefficient_diode, 'load_coefficient_capacitor':$load_coefficient_capacitor, 'load_coefficient_resistor':$load_coefficient_resistor };
 										post( 'add_element2.php', post_data, "#element_result", $add_element );
 									}
 									return false;
@@ -351,9 +380,19 @@
 						complete: function(){
 							$( "#category" ).removeClass( "loading" );
 							if ( category_id == 4 ) {
-								$( "#pryamoy_tok_div" ).show();
+								$( "#load_coefficient_diode_div" ).show();
 							} else {
-								$( "#pryamoy_tok_div" ).hide();
+								$( "#load_coefficient_diode_div" ).hide();
+							}
+							if ( category_id == 5 ) {
+								$( "#load_coefficient_capacitor_div" ).show();
+							} else {
+								$( "#load_coefficient_capacitor_div" ).hide();
+							}
+							if ( category_id == 2 ) {
+								$( "#load_coefficient_resistor_div" ).show();
+							} else {
+								$( "#load_coefficient_resistor_div" ).hide();
 							}
 						},
 						success: function( data ) {

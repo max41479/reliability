@@ -108,15 +108,15 @@
 					</div>
 				</div>
 				<div class="form-group" style="display: none">
-					<label for="pryamoy_tok" class="col-md-4 control-label">Рабочая величина среднего прямого тока через диод:</label>
+					<label for="load_coefficient_diode" class="col-md-4 control-label">Рабочая величина среднего прямого тока через диод:</label>
 					<div class="col-md-2">
-						<input type="text" class="form-control" name="pryamoy_tok">
+						<input type="text" class="form-control" name="load_coefficient_diode">
 					</div>
 					<div class="col-md-1">
 						<p>А</p>
 					</div>
 				</div>
-				<div class="form-group">
+				<div class="form-group" style="display: none">
 					<label for="rabochee_napr" class="col-md-4 control-label">Рабочее напряжение (конденсатор):</label>
 					<div class="col-md-2">
 						<input type="text" class="form-control" name="rabochee_napr">

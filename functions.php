@@ -29,7 +29,7 @@ function add_circuit($level, $name)
 	echo "Добавлена схема " . $name . "<br />";
 }
 
-function add_element($level, $circuit, $id, $category_id, $name, $position, $amount, $pryamoy_tok)
+function add_element($level, $circuit, $id, $category_id, $name, $position, $amount, $load_coefficient_diode, $load_coefficient_capacitor, $load_coefficient_resistor)
 {
 	if (empty($_SESSION['positions'])) {
 		$_SESSION['positions'] = array();
@@ -37,13 +37,13 @@ function add_element($level, $circuit, $id, $category_id, $name, $position, $amo
 	if (!in_array($position, $_SESSION['positions'])) {
 		if (empty($_SESSION['elements'][$level][$circuit])) {
 			$_SESSION['elements'][$level][$circuit] = array();
-			$_SESSION['elements'][$level][$circuit][$id] = array('name' => $name, 'category_id' => $category_id, 'position' => $position, 'amount' => $amount, 'pryamoy_tok' => $pryamoy_tok);
+			$_SESSION['elements'][$level][$circuit][$id] = array('name' => $name, 'category_id' => $category_id, 'position' => $position, 'amount' => $amount, 'load_coefficient_diode' => $load_coefficient_diode, 'load_coefficient_capacitor' => $load_coefficient_capacitor, 'load_coefficient_resistor' => $load_coefficient_resistor);
 			//end($_SESSION['elements'][$level][$circuit]);
 			$_SESSION['positions'][] = $position;
 			echo "Добавлен элемент " . $name . ".";
 		} else {
 			if (!array_key_exists($id, $_SESSION['elements'][$level][$circuit])) {
-				$_SESSION['elements'][$level][$circuit][$id] = array('name' => $name, 'category_id' => $category_id, 'position' => $position, 'amount' => $amount, 'pryamoy_tok' => $pryamoy_tok);
+				$_SESSION['elements'][$level][$circuit][$id] = array('name' => $name, 'category_id' => $category_id, 'position' => $position, 'amount' => $amount, 'load_coefficient_diode' => $load_coefficient_diode, 'load_coefficient_capacitor' => $load_coefficient_capacitor, 'load_coefficient_resistor' => $load_coefficient_resistor);
 				end($_SESSION['elements'][$level][$circuit]);
 				$_SESSION['positions'][] = $position;
 				echo "Добавлен элемент " . $name . ".";

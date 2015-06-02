@@ -20,8 +20,8 @@
 				$intensity					= (double) 0;
 				$mech_vozd					= $_POST['environment'];
 				$temperature				= (float) $_POST['temperature'];
-				$nagruzka_po_napr			= (float) $_POST['nagruzka_po_napr'];
-				//$pryamoy_tok				= (float) $_POST['pryamoy_tok'];
+				//$nagruzka_po_napr			= (float) $_POST['nagruzka_po_napr'];
+				//$load_coefficient_diode				= (float) $_POST['load_coefficient_diode'];
 				$rabochee_napr				= (float) $_POST['rabochee_napr'];
 				$vysota						= (float) $_POST['vysota'];
 				$korpus						= (float) $_POST['korpus'];
@@ -53,21 +53,21 @@
 							$row = $result->fetch_assoc();
 							$k_rezh_is = $row['a'] * exp( $row['b'] * ( $temperature + 273 ) );
 							$result->close();
-							$intensity_is += $row2['intensivnost'] * $element['amount'] * $k_rezh_is * 14 * $korpus * $mech_factory * $vysota * $priemka;
+							$intensity_is += $row2['intensivnost'] * $element['amount'] * $k_rezh_is * $korpus * $mech_factory * $vysota * $priemka;
 							break;
 						case 2:
 							$sql = "SELECT a, b, n_t, g, n_s, j, h FROM k_r_rezist_coefficients WHERE id = " . $row2['group_id'];
 							$result = $mysqli->query( $sql );
 							$row = $result->fetch_assoc();
-							$k_rezh_resist = $row['a'] * exp( $row['b'] * pow( ( $temperature + 273 ) / $row['n_t'], $row['g'] ) ) * exp( pow( $nagruzka_po_napr / $row['n_s'] * pow( ( $temperature + 273 ) / 273, $row['j'] ), $row['h'] ) );
+							$k_rezh_resist = $row['a'] * exp( $row['b'] * pow( ( $temperature + 273 ) / $row['n_t'], $row['g'] ) ) * exp( pow( $element['load_coefficient_resistor'] / $row['n_s'] * pow( ( $temperature + 273 ) / 273, $row['j'] ), $row['h'] ) );
 							$result->close();
-							$intensity_rezist += $row2['intensivnost'] * $element['amount'] * $k_rezh_resist * pow( 1.13, $nagruzka_po_napr ) * $mech_factory * $vysota * $priemka;
+							$intensity_rezist += $row2['intensivnost'] * $element['amount'] * $k_rezh_resist * $mech_factory * $vysota * $priemka;
 							break;
 						case 5:
 							$sql = "SELECT a, b, n_t, g, n_s, h FROM k_r_kondensator_coefficients WHERE id = " . $row2['group_id'];
 							$result = $mysqli->query( $sql );
 							$row = $result->fetch_assoc();
-							$k_rezh_kondensator = $row['a'] * ( pow( ( $rabochee_napr / 50 ) / $row['n_s'], $row['h'] ) + 1 ) * exp( $row['b'] * pow( ( $temperature + 273 ) / $row['n_t'], $row['g'] ) );
+							$k_rezh_kondensator = $row['a'] * ( pow( ( $element['load_coefficient_capacitor'] ) / $row['n_s'], $row['h'] ) + 1 ) * exp( $row['b'] * pow( ( $temperature + 273 ) / $row['n_t'], $row['g'] ) );
 							$result->close();
 							$intensity_kondensator += $row2['intensivnost'] * $element['amount'] * $k_rezh_kondensator * $mech_factory * $vysota * $priemka;
 							break;
@@ -75,11 +75,10 @@
 							$sql = "SELECT a, n_t, t_m, l, delta_t FROM k_r_diod_coefficients WHERE id = " . $row2['group_id'];
 							$result = $mysqli->query( $sql );
 							$row = $result->fetch_assoc();
-							$k_el_diod = $element['pryamoy_tok'] /*/ 3*/;
-							$f = 273 + $temperature + ( 175 - 175 ) + ( $row['delta_t'] * $k_el_diod ) / 150 * ( 175 - 25 );
+							$f = 273 + $temperature + ( 175 - 175 ) +  $row['delta_t'] * $element['load_coefficient_diode'] * ( ( 175 - 25 ) / 150 );
 							$k_rezh_diod = $row['a'] * exp( $row['n_t'] / $f ) * exp( pow( $f / $row['t_m'], $row['l'] ) );
 							$result->close();
-							$intensity_diod += $row2['intensivnost'] * $element['amount'] * $k_rezh_diod * pow( 1.06, $nagruzka_po_napr ) * $mech_factory * $vysota * $priemka;
+							$intensity_diod += $row2['intensivnost'] * $element['amount'] * $k_rezh_diod * $mech_factory * $vysota * $priemka;
 							break;
 						case 3:
 						case 6:
