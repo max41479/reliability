@@ -25,8 +25,8 @@
 		echo 'Базовая интенсивность отказов не введена, либо поле содержит не цифры';
 		exit();
 	}
-	$sql = "insert into spravochnik (nazvanie, elementtype, intensivnost, int_hran,kolichestvo, variant, group_id) values 
-		('" . $_POST["nazvanie"] . "', '" . $_POST["category_id"] . "', '" . $_POST["bazov_int"] . "', '0', '0', '0', '" . $_POST["type_id"] . "')";
+	$sql = "insert into spravochnik (nazvanie, elementtype, intensivnost, group_id) values
+		('" . $_POST["nazvanie"] . "', '" . $_POST["category_id"] . "', '" . $_POST["bazov_int"] . "', '" . $_POST["type_id"] . "')";
 	$result = $mysqli->query($sql);
 	if (!$result)
 	{

@@ -29,7 +29,7 @@
 				<div class="col-md-8">
 					<ul id="tree">
 						<?php include "tree.php";
-						//var_dump($_SESSION);
+						var_dump($_SESSION);
 						?>
 					</ul>
 				</div>
@@ -248,6 +248,15 @@
 												'<input type="text" class="form-control" name="load_coefficient_resistor" id="load_coefficient_resistor">' +
 											'</div>' +
 										'</div>'+
+										'<div class="form-group" id="korpus_div" style="display: none">' +
+											'<label for="korpus" class="col-md-6 control-label">Материал корпуса:</label>' +
+											'<div class="col-md-5">' +
+												'<select name="korpus" id="korpus" class="form-control">' +
+													'<option value="3.0">пластмасса</option>' +
+													'<option value="1.0">металл</option>' +
+												'</select>' +
+											'</div>' +
+										'</div>'+
 										'<div id="element_result"></div>' +
 										'<div id="position_result"></div>' +
 										'<div id="amount_result"></div>' +
@@ -286,6 +295,7 @@
 									var load_coefficient_diode = $( "#load_coefficient_diode" ).val();
 									var $load_coefficient_capacitor = $( "#load_coefficient_capacitor").val();
 									var $load_coefficient_resistor = $( "#load_coefficient_resistor").val();
+									var korpus = $( "#korpus").val();
 
 									//hide all error messages
 									$( "div" ).removeClass( "has-error" );
@@ -322,7 +332,7 @@
 										state = 1;
 									}
 									if ( state == 0 ) { //send data to server
-										var post_data = { 'level':level_id, 'circuit':circuit_id, 'element_id':element_id, 'category_id':category_id, 'name':element_name, 'position':position, 'amount':amount, 'load_coefficient_diode':load_coefficient_diode, 'load_coefficient_capacitor':$load_coefficient_capacitor, 'load_coefficient_resistor':$load_coefficient_resistor };
+										var post_data = { 'level':level_id, 'circuit':circuit_id, 'element_id':element_id, 'category_id':category_id, 'name':element_name, 'position':position, 'amount':amount, 'load_coefficient_diode':load_coefficient_diode, 'load_coefficient_capacitor':$load_coefficient_capacitor, 'load_coefficient_resistor':$load_coefficient_resistor, 'korpus':korpus};
 										post( 'add_element2.php', post_data, "#element_result", $add_element );
 									}
 									return false;
@@ -393,6 +403,11 @@
 								$( "#load_coefficient_resistor_div" ).show();
 							} else {
 								$( "#load_coefficient_resistor_div" ).hide();
+							}
+							if ( category_id == 1 ) {
+								$( "#korpus_div" ).show();
+							} else {
+								$( "#korpus_div" ).hide();
 							}
 						},
 						success: function( data ) {

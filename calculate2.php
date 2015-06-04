@@ -20,11 +20,8 @@
 				$intensity					= (double) 0;
 				$mech_vozd					= $_POST['environment'];
 				$temperature				= (float) $_POST['temperature'];
-				//$nagruzka_po_napr			= (float) $_POST['nagruzka_po_napr'];
-				//$load_coefficient_diode				= (float) $_POST['load_coefficient_diode'];
 				$rabochee_napr				= (float) $_POST['rabochee_napr'];
 				$vysota						= (float) $_POST['vysota'];
-				$korpus						= (float) $_POST['korpus'];
 				$priemka					= (float) $_POST['priemka'];
 				$t_expl						= (float) $_POST['t_expl'];
 				$pri						= $_POST['pri'];
@@ -42,10 +39,9 @@
 				$result->close();
 				$mech_factory = $rez_vozd[0];
 				foreach ( $elements[ $level ][ $circuit ] as $element_id => $element ) {
-					$sql = "SELECT intensivnost, int_hran, elementtype, group_id FROM spravochnik WHERE id = " . $element_id;
+					$sql = "SELECT intensivnost, elementtype, group_id FROM spravochnik WHERE id = " . $element_id;
 					$result2 = $mysqli->query( $sql );
 					$row2 = $result2->fetch_assoc();
-					var_dump( $row2 );
 					switch ( $row2['elementtype'] ) {
 						case 1:
 							$sql = "SELECT a, b FROM k_r_is_coefficients WHERE id = " . $row2['group_id'];
@@ -53,7 +49,7 @@
 							$row = $result->fetch_assoc();
 							$k_rezh_is = $row['a'] * exp( $row['b'] * ( $temperature + 273 ) );
 							$result->close();
-							$intensity_is += $row2['intensivnost'] * $element['amount'] * $k_rezh_is * $korpus * $mech_factory * $vysota * $priemka;
+							$intensity_is += $row2['intensivnost'] * $element['amount'] * $k_rezh_is * $element['korpus'] * $mech_factory * $vysota * $priemka;
 							break;
 						case 2:
 							$sql = "SELECT a, b, n_t, g, n_s, j, h FROM k_r_rezist_coefficients WHERE id = " . $row2['group_id'];
