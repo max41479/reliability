@@ -20,7 +20,6 @@
 				$intensity					= (double) 0;
 				$mech_vozd					= $_POST['environment'];
 				$temperature				= (float) $_POST['temperature'];
-				$rabochee_napr				= (float) $_POST['rabochee_napr'];
 				$vysota						= (float) $_POST['vysota'];
 				$priemka					= (float) $_POST['priemka'];
 				$t_expl						= (float) $_POST['t_expl'];
@@ -37,7 +36,7 @@
 				$result = $mysqli->query( $sql );
 				$rez_vozd = $result->fetch_row();
 				$result->close();
-				$mech_factory = $rez_vozd[0];
+				$mech_factory = (float) $rez_vozd[0];
 				foreach ( $elements[ $level ][ $circuit ] as $element_id => $element ) {
 					$sql = "SELECT intensivnost, elementtype, group_id FROM spravochnik WHERE id = " . $element_id;
 					$result2 = $mysqli->query( $sql );
@@ -125,7 +124,7 @@
 				}
 				$intensity += $intensity_is + $intensity_rezist + $intensity_kondensator + $intensity_diod + $intensity_paika + $intensity_transformator;
 				$lyambda_pict = '<img src="img/lyambda_pict.JPG" width=240 height=30 align = middle>';
-				echo '<br>Общая интенсивность отказов: ', $lyambda_pict, ' = ', round( $intensity, 8 ), ' 1/ч';
+				echo '<br>Общая интенсивность отказов: ', $lyambda_pict, ' = ', $intensity, ' 1/ч';
 				$VBR = exp( -$intensity * $t_expl );
 				$VBR_pict = '<img src="img/VBR_pict.JPG" align = middle>';
 				echo '<br>ВБР ', $VBR_pict, ' = ', round( $VBR, 7 );

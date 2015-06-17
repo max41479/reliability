@@ -13,20 +13,20 @@
 			<div id="result"></div>
 			<form class="form-horizontal" role="form" action="add_db.php" method="post">
 				<div class="form-group">
-					<label for="nazvanie" class="col-md-4 control-label">Название элемента:</label>
-					<div class="col-md-2">
+					<label for="nazvanie" class="col-md-6 control-label">Название элемента:</label>
+					<div class="col-md-3">
 						<input type="text" class="form-control" name="nazvanie">
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-md-4 control-label" for="category_id">Выберите категорию</label>
-					<div class="col-md-2">
+					<label class="col-md-6 control-label" for="category_id">Выберите категорию</label>
+					<div class="col-md-3">
 						<select id="category_id" class="form-control">
 							<option value="-1 " selected disabled>Выберите категорию</option>
 							<?php
 								include ("db.php");
 								global $mysqli;
-								
+
 								$sql = "SELECT id, name FROM `element_types`";
 								$result = $mysqli->query($sql);
 								while ($row = $result->fetch_assoc())
@@ -35,30 +35,30 @@
 								}
 								$result->close();
 								$mysqli->close();
-								
+
 							?>
 						</select>
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-md-4 control-label" for="type_id">Выберите подтип</label>
-					<div class="col-md-2">
+					<label class="col-md-6 control-label" for="type_id">Выберите подтип</label>
+					<div class="col-md-3">
 						<select id="type_id" class="form-control" disabled>
 							<option value="-1" selected disabled>Выберите тип</option>
 						</select>
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="bazov_int" class="col-md-4 control-label">Базовая интенсивность отказов</label>
-					<div class="col-md-2">
+					<label for="bazov_int" class="col-md-6 control-label">Базовая интенсивность отказов</label>
+					<div class="col-md-3">
 						<input type="text" class="form-control" name="bazov_int">
 					</div>
-					<div class="col-md-2">
+					<div class="col-md-3">
 						<p>(1.5e-9) 1/ч</p>
 					</div>
 				</div>
 				<div class="form-group">
-					<div class="col-md-offset-4 col-md-2">
+					<div class="col-md-offset-4 col-md-3">
 						<button class="btn btn-default" id="submit">Добавить</button>
 					</div>
 				</div>

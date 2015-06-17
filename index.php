@@ -29,7 +29,7 @@
 				<div class="col-md-8">
 					<ul id="tree">
 						<?php include "tree.php";
-						var_dump($_SESSION);
+						//var_dump($_SESSION);
 						?>
 					</ul>
 				</div>

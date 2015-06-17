@@ -10,7 +10,6 @@ function add_level($name)
 	{
 		$_SESSION['levels'][] = $name;
 	}
-	//end($_SESSION['levels']);
 	echo "Добавлен уровень  " . $name . "<br />";
 }
 
@@ -25,7 +24,6 @@ function add_circuit($level, $name)
 	{
 		$_SESSION['circuits'][$level][] = $name;
 	}
-	//end($_SESSION['circuits'][$level]);
 	echo "Добавлена схема " . $name . "<br />";
 }
 
@@ -38,7 +36,6 @@ function add_element($level, $circuit, $id, $category_id, $name, $position, $amo
 		if (empty($_SESSION['elements'][$level][$circuit])) {
 			$_SESSION['elements'][$level][$circuit] = array();
 			$_SESSION['elements'][$level][$circuit][$id] = array('name' => $name, 'category_id' => $category_id, 'position' => $position, 'amount' => $amount, 'load_coefficient_diode' => $load_coefficient_diode, 'load_coefficient_capacitor' => $load_coefficient_capacitor, 'load_coefficient_resistor' => $load_coefficient_resistor, 'korpus' => $korpus);
-			//end($_SESSION['elements'][$level][$circuit]);
 			$_SESSION['positions'][] = $position;
 			echo "Добавлен элемент " . $name . ".";
 		} else {
